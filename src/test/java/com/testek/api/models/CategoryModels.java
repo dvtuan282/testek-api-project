@@ -1,25 +1,37 @@
 package com.testek.api.models;
 
+import java.util.UUID;
+
 public class CategoryModels {
-    private String cateDes;
+    private UUID id;
+    private String cateDesc;
     private String categoryName;
     private String status;
 
     public CategoryModels() {
     }
 
-    public CategoryModels(String cateDes, String categoryName, String status) {
-        this.cateDes = cateDes;
+    public CategoryModels(UUID id, String cateDesc, String categoryName, String status) {
+        this.id = id;
+        this.cateDesc = cateDesc;
         this.categoryName = categoryName;
         this.status = status;
     }
 
-    public String getCateDes() {
-        return cateDes;
+    public UUID getId() {
+        return id;
     }
 
-    public void setCateDes(String cateDes) {
-        this.cateDes = cateDes;
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getcateDesc() {
+        return cateDesc;
+    }
+
+    public void setcateDesc(String cateDesc) {
+        this.cateDesc = cateDesc;
     }
 
     public String getCategoryName() {

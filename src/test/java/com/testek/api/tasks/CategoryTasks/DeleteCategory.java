@@ -1,8 +1,10 @@
 package com.testek.api.tasks.CategoryTasks;
 
 import com.testek.api.tasks.basicTasks.SendRequestDelete;
+import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.Task;
+import net.serenitybdd.rest.SerenityRest;
 
 import java.util.HashMap;
 import java.util.Map;

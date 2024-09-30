@@ -52,7 +52,7 @@ public class CreateCategoryTestCase {
     @Test
     void createWhenNotLogged() {
         actor.attemptsTo(
-                CreateCategory.withCategory(new CategoryModels("Dòng xe địa hình cao cấp", "Xe địa hình CC", "ACTIVE"), false)
+                CreateCategory.withCategory(new CategoryModels(null, "Dòng xe địa hình cao cấp", "Xe địa hình CC", "ACTIVE"), false)
         );
         actor.should(
                 seeThat("Tạo danh mục khi chưa login", BasicQuestion.status(), equalTo(401))
@@ -61,11 +61,11 @@ public class CreateCategoryTestCase {
 
     private static Stream<Arguments> CreateFor() {
         return Stream.of(
-                Arguments.of(new CategoryModels("Dòng xe địa hình cao cấp", "Không chứa sản phẩm", "ACTIVE"), "Tạo danh mục thành công", 201),
-                Arguments.of(new CategoryModels("", "Xe đạp giấc mơ", "ACTIVE"), "Tạo danh mục thành công khi để trống các trường option", 201),
-                Arguments.of(new CategoryModels("Dòng xe đạp cho người già", "", "ACTIVE"), "Tạo danh mục thành công khi để trống các trường option", 400),
-                Arguments.of(new CategoryModels("Dòng xe đạp đường phố", " ", "ACTIVE"), "Tạo danh mục thành công khi để trống các trường option", 400),
-                Arguments.of(new CategoryModels("Dòng xe địa hình cao cấp copy", "Xe địa hình CC", "ACTIVE"), "Tạo danh mục thành công", 400)
+                Arguments.of(new CategoryModels(null, "Dòng xe địa hình cao cấp", "Không chứa sản phẩm", "ACTIVE"), "Tạo danh mục thành công", 201),
+                Arguments.of(new CategoryModels(null, "", "Xe đạp giấc mơ", "ACTIVE"), "Tạo danh mục thành công khi để trống các trường option", 201),
+                Arguments.of(new CategoryModels(null, "Dòng xe đạp cho người già", "", "ACTIVE"), "Tạo danh mục thành công khi để trống các trường option", 400),
+                Arguments.of(new CategoryModels(null, "Dòng xe đạp đường phố", " ", "ACTIVE"), "Tạo danh mục thành công khi để trống các trường option", 400),
+                Arguments.of(new CategoryModels(null, "Dòng xe địa hình cao cấp copy", "Xe địa hình CC", "ACTIVE"), "Tạo danh mục thành công", 400)
         );
     }
 }

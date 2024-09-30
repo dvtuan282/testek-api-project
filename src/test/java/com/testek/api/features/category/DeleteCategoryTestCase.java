@@ -1,24 +1,25 @@
-
 package com.testek.api.features.category;
 
 import com.testek.api.models.AccountModel;
+import com.testek.api.models.CategoryModels;
+import com.testek.api.models.CategoryResponseModel;
 import com.testek.api.questions.BasicQuestion;
+import com.testek.api.questions.GetCategoryQuestion;
+import com.testek.api.tasks.CategoryTasks.CreateCategory;
 import com.testek.api.tasks.CategoryTasks.DeleteCategory;
 import com.testek.api.tasks.Oauth2.Login;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
+import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.abilities.CallAnApi;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
+import java.util.UUID;
 
 import static net.serenitybdd.screenplay.GivenWhenThen.seeThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -41,66 +42,40 @@ public class DeleteCategoryTestCase {
         );
     }
 
-    @ParameterizedTest
-    @MethodSource("deleteScenarios")
-    void DeleteCategoryWhenLogin(DeleteScenario scenario) {
+    @Test
+    void DeleteCategoryWhenLogin() {
+//        // Tạo category mới với thông tin được cung cấp
+//        CategoryModels categoryInput = new CategoryModels(null,"Cái này để case1", "Tuấn case121", "ACTIVE");
+//        actor.attemptsTo(
+//                CreateCategory.withCategory(categoryInput, true)  // Gọi task để tạo category
+//        );
+//
+//        // Lấy phản hồi từ API sau khi tạo category
+//        CategoryResponseModel categoryResponseCreate = actor.asksFor(GetCategoryQuestion.fetchedCategory());
+//
+//        if (categoryResponseCreate == null || categoryResponseCreate.getData() == null) {
+//            System.out.println("Không thể lấy được category. Phản hồi là null hoặc không có dữ liệu.");
+//            return;  // Dừng test nếu không có dữ liệu
+//        }
+//
+//        // Hiển thị ID của category vừa tạo
+//        UUID categoryId = categoryResponseCreate.getData().getId(); // Lấy ID từ phần "data"
+//        System.out.println("ID của Category vừa tạo:  " + categoryId);
+
+        // Chuẩn bị pathParam và queryParam để xóa category
+        Map<String, Object> pathParam = new HashMap<>();
+        Map<String, Object> queryParam = new HashMap<>();
+        pathParam.put("id", "4942a218-1e2c-492c-affd-df672a43fc60");  // Lấy ID từ response để xóa
+        queryParam.put("ifSoft", true);  // Chọn xóa mềm (soft delete)
+
+        // Thực hiện yêu cầu xóa category
         actor.attemptsTo(
-                DeleteCategory.fromDetails(true, scenario.queryParams(), scenario.pathParam())
+                DeleteCategory.fromDetails(true, queryParam, pathParam)
         );
-
+        // Xác nhận rằng status của yêu cầu là 200
         actor.should(
-                seeThat(scenario.expectedMessage, BasicQuestion.status(), equalTo(scenario.expectedStatus))
+                seeThat("Kiểm tra mã trạng thái sau khi xóa", BasicQuestion.status(), equalTo(200))
         );
     }
 
-    static Stream<Arguments> deleteScenarios() {
-        return Stream.of(
-//                Arguments.of(DeleteScenario.CHANGER_INACTIVE_WITH_PRODUCT),
-//                Arguments.of(DeleteScenario.CHANGER_INACTIVE_WITHOUT_PRODUCT),
-                Arguments.of(DeleteScenario.DELETE_STATUS_INACTIVE_WITH_SOFT)
-//                Arguments.of(DeleteScenario.HARD_DELETE_WITH_PRODUCTS, true),    // Hard delete with products
-//                Arguments.of(DeleteScenario.HARD_DELETE_WITHOUT_PRODUCTS, true), // Hard delete without products
-//                Arguments.of(DeleteScenario.DELETE_NON_EXISTENT_CATEGORY, true), // Delete non-existent category
-//                Arguments.of(DeleteScenario.DELETE_WITHOUT_ISSOFT, true),        // Delete without isSoft
-//                Arguments.of(DeleteScenario.DELETE_WITHOUT_LOGIN, false)         // Delete without login (logged out)
-        );
-    }
-
-    // Enum to define different delete scenarios
-    enum DeleteScenario {
-//        CHANGER_INACTIVE_WITH_PRODUCT(true, "5a28888b-02ec-401a-97b8-ede4b47cb198", 200, "Thay đổi trạng thái khi xóa cate có sản phẩm với isSoft = true"),
-//        CHANGER_INACTIVE_WITHOUT_PRODUCT(true, "1f3bf4ef-963f-4488-ba6d-b95bb2b823dd", 200, "Thay đổi trạng thái khi xóa cate không có sản phẩm với isSoft = true"),
-        DELETE_STATUS_INACTIVE_WITH_SOFT(true, "5a28888b-02ec-401a-97b8-ede4b47cb198", 200, "Xóa cate có trạng thái là inactive với isoft = true");
-//        DELETE_(false, "categoryWithProducts", 200, "Category hard deleted with products"),
-//        HARD_DELETE_WITHOUT_PRODUCTS(false, "categoryWithoutProducts", 200, "Category hard deleted without products"),
-//        DELETE_NON_EXISTENT_CATEGORY(true, "nonExistentCategory", 404, "Category not found"),
-//        DELETE_WITHOUT_ISSOFT(null, "categoryWithoutIsSoft", 400, "isSoft parameter missing"),
-//        DELETE_WITHOUT_LOGIN(true, "categoryWithoutLogin", 401, "Authentication required");
-
-        final boolean isSoft;
-        final String id;
-        final int expectedStatus;
-        final String expectedMessage;
-
-        // Constructor for each scenario
-        DeleteScenario(boolean isSoft, String id, int expectedStatus, String expectedMessage) {
-            this.isSoft = isSoft;
-            this.id = id;
-            this.expectedStatus = expectedStatus;
-            this.expectedMessage = expectedMessage;
-        }
-
-        // Helper methods to generate query and path parameters for each scenario
-        public Map<String, Object> pathParam() {
-            Map<String, Object> pathParam = new HashMap<>();
-            pathParam.put("id", id);
-            return pathParam;
-        }
-
-        public Map<String, Object> queryParams() {
-            Map<String, Object> queryParam = new HashMap<>();
-            queryParam.put("isSoft", isSoft);
-            return queryParam;
-        }
-    }
 }
