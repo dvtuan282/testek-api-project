@@ -3,7 +3,7 @@ package com.testek.api.models;
 import java.util.UUID;
 
 public class CategoryModels {
-    private UUID id;
+    private String id;
     private String cateDesc;
     private String categoryName;
     private String status;
@@ -11,19 +11,14 @@ public class CategoryModels {
     public CategoryModels() {
     }
 
-    public CategoryModels(UUID id, String cateDesc, String categoryName, String status) {
-        this.id = id;
+    public CategoryModels(String cateDesc, String categoryName, String status) {
         this.cateDesc = cateDesc;
         this.categoryName = categoryName;
         this.status = status;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public String getcateDesc() {

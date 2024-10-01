@@ -5,13 +5,13 @@ import net.serenitybdd.screenplay.Question;
 
 import static net.serenitybdd.rest.SerenityRest.lastResponse;
 
-public class BasicQuestion implements Question<Integer> {
+public class ResponseStatusCode implements Question<Integer> {
     @Override
     public Integer answeredBy(Actor actor) {
         return lastResponse().statusCode();
     }
 
     public static Question<Integer> status() {
-        return new BasicQuestion();
+        return new ResponseStatusCode();
     }
 }

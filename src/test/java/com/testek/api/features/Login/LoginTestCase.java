@@ -1,14 +1,12 @@
 package com.testek.api.features.Login;
 
 import com.testek.api.models.AccountModel;
-import com.testek.api.questions.BasicQuestion;
+import com.testek.api.questions.ResponseStatusCode;
 import com.testek.api.tasks.Oauth2.Login;
-import io.cucumber.cucumberexpressions.Argument;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.abilities.CallAnApi;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -37,7 +35,7 @@ public class LoginTestCase {
                 Login.withAccount(accountModel)
         );
         actor.should(
-                seeThat(message, BasicQuestion.status(), equalTo(statusCodeExpected))
+                seeThat(message, ResponseStatusCode.status(), equalTo(statusCodeExpected))
         );
     }
 

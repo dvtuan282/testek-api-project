@@ -62,7 +62,11 @@
             <artifactId>serenity-screenplay-rest</artifactId>
             <version>4.1.20</version>
             <scope>test</scope>
-
+        </dependency>
+        <dependency>
+            <groupId>net.serenity-bdd</groupId>
+            <artifactId>serenity-ensure</artifactId>
+            <version>4.1.20</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/io.rest-assured/rest-assured -->
         <dependency>
@@ -118,9 +122,9 @@
                 <configuration>
                     <includes>
                         <include>DeleteCategoryTestCase.java</include>
-<!--                        <include>**/TestCase*.java</include>-->
-<!--                        <include>**/When*.java</include>-->
-<!--                        <include>**/*Story.java</include>-->
+                        <!--                        <include>**/TestCase*.java</include>-->
+                        <!--                        <include>**/When*.java</include>-->
+                        <!--                        <include>**/*Story.java</include>-->
                     </includes>
                     <argLine>-Xmx512m</argLine>
                 </configuration>

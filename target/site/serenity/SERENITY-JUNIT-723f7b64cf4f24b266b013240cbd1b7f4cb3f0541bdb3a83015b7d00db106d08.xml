@@ -1,1 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><testsuite errors="0" failures="0" name="com.testek.api.features.category.DeleteCategoryTestCase" skipped="0" tests="1" time="4.2" timestamp="2024-09-29 11:24:53"><testcase classname="com.testek.api.features.category.DeleteCategoryTestCase" name="DeleteCategoryWhenLogin(DeleteScenario)"/></testsuite>

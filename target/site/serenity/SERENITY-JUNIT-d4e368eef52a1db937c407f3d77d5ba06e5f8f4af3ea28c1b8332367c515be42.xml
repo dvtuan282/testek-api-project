@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><testsuite errors="0" failures="1" name="com.testek.api.features.category.DeleteCategoryTestCase" skipped="0" tests="1" time="5.86" timestamp="2024-10-01 12:54:52"><testcase classname="com.testek.api.features.category.DeleteCategoryTestCase" name="Delete category when login"><failure message="&#13;&#10;Expected: &lt;200&gt;&#13;&#10;     but: was &lt;400&gt;" type="java.lang.AssertionError">&#13;
-Expected: &lt;200&gt;&#13;
-     but: was &lt;400&gt;</failure><system-err>&#13;
-Expected: &lt;200&gt;&#13;
-     but: was &lt;400&gt;&#13;
-com.testek.api.features.category.DeleteCategoryTestCase.DeleteCategoryWhenLogin(DeleteCategoryTestCase.java:76)&#13;
-</system-err></testcase></testsuite>

@@ -2,28 +2,29 @@ package com.testek.api.features.category;
 
 import com.testek.api.models.AccountModel;
 import com.testek.api.models.CategoryModels;
-import com.testek.api.models.CategoryResponseModel;
-import com.testek.api.questions.BasicQuestion;
 import com.testek.api.questions.GetCategoryQuestion;
+import com.testek.api.questions.ResponseBodyQuestion;
+import com.testek.api.questions.ResponseStatusCode;
 import com.testek.api.tasks.CategoryTasks.CreateCategory;
 import com.testek.api.tasks.CategoryTasks.DeleteCategory;
 import com.testek.api.tasks.Oauth2.Login;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
-import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
+import net.serenitybdd.screenplay.ensure.Ensure;
 import net.serenitybdd.screenplay.rest.abilities.CallAnApi;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import static net.serenitybdd.screenplay.GivenWhenThen.seeThat;
-import static org.hamcrest.Matchers.equalTo;
-
+import java.util.stream.Stream;
+// cần so sánh thêm với các trường trong response body
+// với các trường pass thfi response và status trả ra như nào
+// kết hợp với các trường failse thì response và status trả ra như nào
+// các trường có sản phẩm thì sẽ như nào khi đúng và false
 @ExtendWith(SerenityJUnit5Extension.class)
 public class DeleteCategoryTestCase {
 
@@ -42,40 +43,39 @@ public class DeleteCategoryTestCase {
         );
     }
 
-    @Test
-    void DeleteCategoryWhenLogin() {
-//        // Tạo category mới với thông tin được cung cấp
-//        CategoryModels categoryInput = new CategoryModels(null,"Cái này để case1", "Tuấn case121", "ACTIVE");
-//        actor.attemptsTo(
-//                CreateCategory.withCategory(categoryInput, true)  // Gọi task để tạo category
-//        );
-//
-//        // Lấy phản hồi từ API sau khi tạo category
-//        CategoryResponseModel categoryResponseCreate = actor.asksFor(GetCategoryQuestion.fetchedCategory());
-//
-//        if (categoryResponseCreate == null || categoryResponseCreate.getData() == null) {
-//            System.out.println("Không thể lấy được category. Phản hồi là null hoặc không có dữ liệu.");
-//            return;  // Dừng test nếu không có dữ liệu
-//        }
-//
-//        // Hiển thị ID của category vừa tạo
-//        UUID categoryId = categoryResponseCreate.getData().getId(); // Lấy ID từ phần "data"
-//        System.out.println("ID của Category vừa tạo:  " + categoryId);
+    @ParameterizedTest
+    @MethodSource("Dataprivot")
+    void deleteCategoryWhenNotContainProducts(CategoryModels categoryModels, boolean isSoft, String message) {
+        CreateCategoryThenDelete(categoryModels, isSoft, message);
+    }
 
-        // Chuẩn bị pathParam và queryParam để xóa category
-        Map<String, Object> pathParam = new HashMap<>();
-        Map<String, Object> queryParam = new HashMap<>();
-        pathParam.put("id", "4942a218-1e2c-492c-affd-df672a43fc60");  // Lấy ID từ response để xóa
-        queryParam.put("ifSoft", true);  // Chọn xóa mềm (soft delete)
-
-        // Thực hiện yêu cầu xóa category
-        actor.attemptsTo(
-                DeleteCategory.fromDetails(true, queryParam, pathParam)
-        );
-        // Xác nhận rằng status của yêu cầu là 200
-        actor.should(
-                seeThat("Kiểm tra mã trạng thái sau khi xóa", BasicQuestion.status(), equalTo(200))
+    private static Stream<Arguments> Dataprivot() {
+        return Stream.of(
+                Arguments.of(new CategoryModels("Dòng xe địa hình cao cấp", "test02-102", "ACTIVE"), true, "case1"),
+                Arguments.of(new CategoryModels("Dòng xe địa hình cao cấp", "test02-103", "ACTIVE"), false, "case2"),
+                Arguments.of(new CategoryModels("Dòng xe địa hình cao cấp", "test02-105", "INACTIVE"), false, "case3"),
+                Arguments.of(new CategoryModels("Dòng xe địa hình cao cấp", "test02-10423", "INACTIVE"), true, "case4")
         );
     }
 
+    private void CreateCategoryThenDelete(CategoryModels categoryInput, boolean isSoft, String message) {
+        // Tạo mới một danh mục để xóa
+        actor.attemptsTo(CreateCategory.withCategory(categoryInput, true));
+        // Lấy id của category đã tạo mới để xóa
+        CategoryModels categoryResponse = actor.asksFor(GetCategoryQuestion.fetchedCategory());
+        // Xóa category sau khi đã lấy được từ response
+        System.out.println("id đã tạo: " + categoryResponse.getId());
+        actor.attemptsTo(
+                DeleteCategory.withOptions(isSoft, categoryResponse.getId()),
+                Ensure.that(message, ResponseStatusCode.status()).isEqualTo(200)
+        );
+        System.out.println("Tại đây");
+        // clear category khi xóa với isSoft = true.
+        if (isSoft) {
+            actor.attemptsTo(
+                    DeleteCategory.withOptions(false, categoryResponse.getId())
+            );
+        }
+        System.out.println("oke");
+    }
 }
